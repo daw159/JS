@@ -1,0 +1,701 @@
+<!-- genertaed by the LLM -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Part 1 — Apna College</title>
+    <style>
+        /* ── reset & base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f4f8;
+            color: #1a1a2e;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* ── card ── */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f4f8;
+            color: #1a1a2e;
+        }
+
+        /* ── player cards ── */
+        .players-grid {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .player-card {
+            background: #f0f4f8;
+            border-radius: 8px;
+            padding: 14px 18px;
+            min-width: 140px;
+            border-left: 4px solid #4361ee;
+        }
+
+        .player-card .player-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .player-card .player-runs {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .player-card .player-country {
+            font-size: 12px;
+            color: #4361ee;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* ── highlight class — applied by JS ── */
+        .highlight {
+            background: #fff3cd;
+            border-left-color: #f59e0b;
+        }
+
+        .active-player {
+            background: #d1fae5;
+            border-left-color: #10b981;
+        }
+
+        /* ── buttons ── */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.85; }
+
+        .btn-primary   { background: #4361ee; color: white; }
+        .btn-success   { background: #10b981; color: white; }
+        .btn-danger    { background: #ef4444; color: white; }
+        .btn-warning   { background: #f59e0b; color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+
+        /* ── input section ── */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 10px 14px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus { border-color: #4361ee; }
+
+        /* ── output box ── */
+        #output-box {
+            background: #1a1a2e;
+            color: #a8ff78;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            padding: 16px;
+            border-radius: 8px;
+            min-height: 60px;
+            margin-top: 12px;
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+
+        /* ── style demo box ── */
+        #style-box {
+            width: 100%;
+            height: 80px;
+            background: #4361ee;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 12px;
+            transition: all 0.3s;
+        }
+
+        /* ── list ── */
+        #player-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        #player-list li {
+            padding: 10px 14px;
+            background: #f0f4f8;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #player-list li span {
+            font-size: 12px;
+            color: #4361ee;
+            font-weight: 500;
+        }
+
+        /* ── attribute demo ── */
+        #demo-link {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 18px;
+            background: #4361ee;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        #demo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            margin-top: 12px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #e0e7ff;
+            color: #4361ee;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        /* ── section labels ── */
+        .section-note {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>DOM Part 1 🎯</h1>
+    <p class="subtitle">querySelector · querySelectorAll · DOM Manipulation · Properties</p>
+
+    <!-- ══════════════════════════════════════ -->
+    <!--  SECTION 1 — querySelector demo       -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="card">
+        <h2>1. querySelector — select ONE element</h2>
+        <p class="section-note">Selects the <strong>first matching</strong> element. Uses CSS selector syntax.</p>
+
+        <div class="players-grid">
+            <div class="player-card" id="player-babar">
+                <div class="player-name">Babar Azam</div>
+                <div class="player-runs">Runs: 3000</div>
+                <div class="player-country">Pakistan</div>
+            </div>
+            <div class="player-card" id="player-virat">
+                <div class="player-name">Virat Kohli</div>
+                <div class="player-runs">Runs: 5000</div>
+                <div class="player-country">India</div>
+            </div>
+            <div class="player-card" id="player-joe">
+                <div class="player-name">Joe Root</div>
+                <div class="player-runs">Runs: 4500</div>
+                <div class="player-country">England</div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-primary"   onclick="selectById()">Select by #id</button>
+            <button class="btn-warning"   onclick="selectByClass()">Select by .class</button>
+            <button class="btn-secondary" onclick="selectByTag()">Select by tag</button>
+            <button class="btn-danger"    onclick="resetCards()">Reset</button>
+        </div>
+        <div id="output-box">// output will appear here</div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!--  SECTION 2 — querySelectorAll demo    -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="card">
+        <h2>2. querySelectorAll — select ALL matching elements</h2>
+        <p class="section-note">Returns a <strong>NodeList</strong> of ALL matching elements — like an array.</p>
+
+        <div class="players-grid" id="all-players-grid">
+            <div class="player-card pakk">
+                <div class="player-name">Shaheen Afridi</div>
+                <div class="player-runs">Runs: 300</div>
+                <div class="player-country">Pakistan</div>
+            </div>
+            <div class="player-card pakk">
+                <div class="player-name">Fakhar Zaman</div>
+                <div class="player-runs">Runs: 2200</div>
+                <div class="player-country">Pakistan</div>
+            </div>
+            <div class="player-card">
+                <div class="player-name">Rohit Sharma</div>
+                <div class="player-runs">Runs: 2900</div>
+                <div class="player-country">India</div>
+            </div>
+            <div class="player-card">
+                <div class="player-name">Kane Williamson</div>
+                <div class="player-runs">Runs: 3800</div>
+                <div class="player-country">NZ</div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-primary" onclick="selectAll()">Select ALL .player-card</button>
+            <button class="btn-success" onclick="selectPak()">Select .pakk only</button>
+            <button class="btn-danger"  onclick="resetAll()">Reset</button>
+        </div>
+        <div id="output-box-2">// output will appear here</div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!--  SECTION 3 — DOM Manipulation         -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="card">
+        <h2>3. DOM Manipulation</h2>
+        <p class="section-note">Change text, HTML, styles, classes, and attributes using JS.</p>
+
+        <div class="tag">innerHTML / textContent</div>
+        <div id="style-box">I am a box — change me!</div>
+        <div class="btn-group">
+            <button class="btn-primary"   onclick="changeText()">Change Text</button>
+            <button class="btn-success"   onclick="changeHTML()">Change innerHTML</button>
+            <button class="btn-warning"   onclick="changeStyle()">Change Style</button>
+            <button class="btn-secondary" onclick="addClass()">Add Class</button>
+            <button class="btn-danger"    onclick="removeClass()">Remove Class</button>
+            <button class="btn-danger"    onclick="resetBox()">Reset</button>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!--  SECTION 4 — createElement + append   -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="card">
+        <h2>4. createElement — create & add new elements</h2>
+        <p class="section-note">Create brand new HTML elements with JS and add them to the page.</p>
+
+        <div class="input-group">
+            <input type="text"   id="name-input"  placeholder="Player name">
+            <input type="number" id="runs-input"  placeholder="Runs">
+            <button class="btn-primary" onclick="addPlayer()">Add Player</button>
+            <button class="btn-danger"  onclick="removeLastPlayer()">Remove Last</button>
+        </div>
+        <ul id="player-list"></ul>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!--  SECTION 5 — DOM Properties           -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="card">
+        <h2>5. Important DOM Properties</h2>
+        <p class="section-note">Properties you will use every day in real development.</p>
+
+        <div class="tag">getAttribute / setAttribute</div>
+        <a id="demo-link" href="https://google.com" target="_blank">Visit Google</a>
+        <img id="demo-img" src="https://via.placeholder.com/60" alt="placeholder">
+
+        <div class="btn-group" style="margin-top:14px">
+            <button class="btn-primary"   onclick="getAttr()">getAttribute</button>
+            <button class="btn-success"   onclick="setAttr()">setAttribute</button>
+            <button class="btn-warning"   onclick="checkProps()">Check Properties</button>
+            <button class="btn-secondary" onclick="traverseDOM()">Parent/Child</button>
+        </div>
+        <div id="output-box-3">// output will appear here</div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════ -->
+    <!--  JS — all DOM logic below             -->
+    <!-- ══════════════════════════════════════ -->
+    <script>
+
+    // ════════════════════════════════════════
+    //  SECTION 1 — querySelector
+    // ════════════════════════════════════════
+
+    // querySelector — selects FIRST matching element
+    // uses same syntax as CSS selectors:
+    //   "#id"       for id
+    //   ".class"    for class
+    //   "tag"       for tag name
+    //   "tag.class" combining both
+
+    function selectById() {
+        // select by id — use #
+        let el = document.querySelector("#player-babar");
+        el.classList.add("highlight");
+
+        log("output-box",
+            `document.querySelector("#player-babar")\n` +
+            `→ found: ${el.querySelector(".player-name").textContent}\n` +
+            `→ added 'highlight' class`
+        );
+    }
+
+    function selectByClass() {
+        // querySelector with class — only gets FIRST match
+        let el = document.querySelector(".player-card");
+        el.classList.add("active-player");
+
+        log("output-box",
+            `document.querySelector(".player-card")\n` +
+            `→ only selects FIRST match\n` +
+            `→ found: ${el.querySelector(".player-name").textContent}`
+        );
+    }
+
+    function selectByTag() {
+        // select by tag name
+        let el = document.querySelector("h2");
+        el.style.color = "#4361ee";
+
+        log("output-box",
+            `document.querySelector("h2")\n` +
+            `→ selects FIRST <h2> on the page\n` +
+            `→ text: "${el.textContent.trim()}"\n` +
+            `→ changed its color to blue`
+        );
+    }
+
+    function resetCards() {
+        document.querySelectorAll(".player-card").forEach(c => {
+            c.classList.remove("highlight", "active-player");
+        });
+        document.querySelectorAll("h2").forEach(h => h.style.color = "");
+        log("output-box", "// reset done");
+    }
+
+
+    // ════════════════════════════════════════
+    //  SECTION 2 — querySelectorAll
+    // ════════════════════════════════════════
+
+    // querySelectorAll — returns NodeList of ALL matches
+    // NodeList is like an array — you can loop it with forEach
+    // but it is NOT a real array — map/filter won't work directly
+    // convert with Array.from(nodeList) if you need array methods
+
+    function selectAll() {
+        let all = document.querySelectorAll("#all-players-grid .player-card");
+
+        // forEach works on NodeList directly
+        all.forEach((card, index) => {
+            card.classList.add("highlight");
+        });
+
+        log("output-box-2",
+            `document.querySelectorAll(".player-card")\n` +
+            `→ NodeList length: ${all.length}\n` +
+            `→ is array? ${Array.isArray(all)}\n` +        // false!
+            `→ convert: Array.from(all) to use map/filter`
+        );
+    }
+
+    function selectPak() {
+        // select only .pakk cards
+        let pakPlayers = document.querySelectorAll(".pakk");
+
+        pakPlayers.forEach(card => {
+            card.classList.remove("highlight");
+            card.classList.add("active-player");
+        });
+
+        log("output-box-2",
+            `document.querySelectorAll(".pakk")\n` +
+            `→ found ${pakPlayers.length} Pakistan players\n` +
+            `→ added 'active-player' class to each`
+        );
+    }
+
+    function resetAll() {
+        document.querySelectorAll("#all-players-grid .player-card").forEach(c => {
+            c.classList.remove("highlight", "active-player");
+        });
+        log("output-box-2", "// reset done");
+    }
+
+
+    // ════════════════════════════════════════
+    //  SECTION 3 — DOM Manipulation
+    // ════════════════════════════════════════
+
+    // the main ways to manipulate DOM:
+    // 1. textContent  — change text only (safe)
+    // 2. innerHTML    — change HTML inside element (powerful but careful)
+    // 3. style.X      — change inline CSS
+    // 4. classList    — add/remove/toggle CSS classes
+    // 5. setAttribute — change HTML attributes
+
+    let box = document.querySelector("#style-box");
+
+    function changeText() {
+        // textContent — sets plain text, NO html tags processed
+        box.textContent = "Text changed with textContent!";
+
+        // edge case: textContent treats tags as plain text
+        // box.textContent = "<b>bold</b>";  → shows literally: <b>bold</b>
+    }
+
+    function changeHTML() {
+        // innerHTML — processes HTML tags inside the string
+        box.innerHTML = "<b>Bold</b> text via <u>innerHTML</u>!";
+
+        // edge case: never put user input directly into innerHTML
+        // it can cause XSS attacks — use textContent for user data
+    }
+
+    function changeStyle() {
+        // style.property — camelCase, not kebab-case
+        box.style.backgroundColor = "#ef4444"; // NOT background-color
+        box.style.fontSize         = "20px";
+        box.style.borderRadius     = "4px";
+        // camelCase rule: background-color → backgroundColor
+        //                 font-size        → fontSize
+        //                 border-radius    → borderRadius
+    }
+
+    function addClass() {
+        // classList.add — adds a CSS class
+        box.classList.add("highlight");
+        box.textContent = "highlight class added!";
+        // classList methods:
+        // .add("cls")       — add class
+        // .remove("cls")    — remove class
+        // .toggle("cls")    — add if absent, remove if present
+        // .contains("cls")  — returns true/false
+    }
+
+    function removeClass() {
+        box.classList.remove("highlight");
+        box.textContent = "highlight class removed!";
+    }
+
+    function resetBox() {
+        box.textContent    = "I am a box — change me!";
+        box.style.cssText  = "";        // clears ALL inline styles at once
+        box.classList.remove("highlight");
+        box.style.background  = "#4361ee";
+        box.style.color       = "white";
+        box.style.height      = "80px";
+        box.style.display     = "flex";
+        box.style.alignItems  = "center";
+        box.style.justifyContent = "center";
+    }
+
+
+    // ════════════════════════════════════════
+    //  SECTION 4 — createElement + append
+    // ════════════════════════════════════════
+
+    // creating new elements:
+    // 1. document.createElement("tag")  — creates element
+    // 2. element.textContent = "..."    — set its text
+    // 3. element.classList.add("cls")   — add classes
+    // 4. parent.appendChild(child)      — add to DOM
+    // 5. parent.removeChild(child)      — remove from DOM
+
+    function addPlayer() {
+        let nameInput = document.querySelector("#name-input");
+        let runsInput = document.querySelector("#runs-input");
+        let list      = document.querySelector("#player-list");
+
+        let name = nameInput.value.trim();
+        let runs = runsInput.value.trim();
+
+        // edge case: always validate input before using
+        if (!name || !runs) {
+            alert("Please enter both name and runs!");
+            return;
+        }
+
+        // create new <li> element
+        let li = document.createElement("li");
+        li.innerHTML = `${name} <span>${runs} runs</span>`;
+
+        // append to list
+        list.appendChild(li);
+
+        // clear inputs after adding
+        nameInput.value = "";
+        runsInput.value = "";
+        nameInput.focus(); // put cursor back in name input
+    }
+
+    function removeLastPlayer() {
+        let list     = document.querySelector("#player-list");
+        let lastItem = list.lastElementChild;
+
+        // edge case: check if list is empty before removing
+        if (!lastItem) {
+            alert("List is already empty!");
+            return;
+        }
+
+        list.removeChild(lastItem);
+    }
+
+
+    // ════════════════════════════════════════
+    //  SECTION 5 — Important DOM Properties
+    // ════════════════════════════════════════
+
+    function getAttr() {
+        let link = document.querySelector("#demo-link");
+
+        // getAttribute — read any HTML attribute
+        let href   = link.getAttribute("href");
+        let target = link.getAttribute("target");
+        let text   = link.textContent;
+
+        log("output-box-3",
+            `getAttribute("href")   → "${href}"\n` +
+            `getAttribute("target") → "${target}"\n` +
+            `textContent            → "${text}"`
+        );
+    }
+
+    function setAttr() {
+        let link = document.querySelector("#demo-link");
+        let img  = document.querySelector("#demo-img");
+
+        // setAttribute — change any HTML attribute
+        link.setAttribute("href", "https://developer.mozilla.org");
+        link.textContent = "Now Visit MDN Docs!";
+
+        // change image src
+        img.setAttribute("src", "https://via.placeholder.com/60/4361ee/white");
+        img.setAttribute("alt", "blue placeholder");
+
+        log("output-box-3",
+            `setAttribute("href", "https://developer.mozilla.org")\n` +
+            `→ link now points to MDN!\n\n` +
+            `setAttribute("src", "...")\n` +
+            `→ image source changed`
+        );
+    }
+
+    function checkProps() {
+        let box2 = document.querySelector("#style-box");
+
+        // most used DOM properties:
+        log("output-box-3",
+            `// Most used DOM properties:\n\n` +
+            `element.textContent     → plain text content\n` +
+            `element.innerHTML       → HTML content inside\n` +
+            `element.id              → "${document.querySelector(".card").id || "(no id)"}"\n` +
+            `element.className       → class string\n` +
+            `element.classList       → classList object\n` +
+            `element.style           → inline styles object\n` +
+            `element.value           → input field value\n` +
+            `element.href            → link URL\n` +
+            `element.src             → image source\n` +
+            `element.tagName         → tag in UPPERCASE\n` +
+            `element.hidden          → true/false\n` +
+            `element.disabled        → true/false (inputs)\n` +
+            `element.parentElement   → parent node\n` +
+            `element.children        → child elements\n` +
+            `element.firstElementChild → first child\n` +
+            `element.lastElementChild  → last child`
+        );
+    }
+
+    function traverseDOM() {
+        // DOM traversal — moving between elements
+        let card = document.querySelector("#player-babar");
+
+        let parent    = card.parentElement;         // one level up
+        let children  = card.children;              // all direct children
+        let firstChild = card.firstElementChild;    // first child
+        let lastChild  = card.lastElementChild;     // last child
+        let nextSib   = card.nextElementSibling;    // next element beside it
+        let prevSib   = card.previousElementSibling;// prev element beside it
+
+        log("output-box-3",
+            `Traversing from #player-babar:\n\n` +
+            `parentElement        → <${parent.tagName.toLowerCase()} class="${parent.className}">\n` +
+            `children.length      → ${children.length} children\n` +
+            `firstElementChild    → "${firstChild.textContent.trim()}"\n` +
+            `lastElementChild     → "${lastChild.textContent.trim()}"\n` +
+            `nextElementSibling   → #${nextSib ? nextSib.id : "none"}`
+        );
+    }
+
+
+    // ════════════════════════════════════════
+    //  HELPER — log to output box
+    // ════════════════════════════════════════
+    function log(boxId, message) {
+        document.getElementById(boxId).textContent = message;
+    }
+
+    </script>
+</body>
+</html>
